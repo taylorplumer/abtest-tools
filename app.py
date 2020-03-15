@@ -6,22 +6,10 @@ import dash_html_components as html
 from dash.dependencies import Input,Output
 import pandas as pd
 from min_sample_size import min_sample_size
+from create_row import create_row
 import scipy.stats as scs
 
 elements = ['baseline_conversion_rate', 'effect_size', 'power', 'sig_level']
-
-def create_row(element):
-    row = html.Div([
-            html.Div([
-            html.P(element)], className="six columns", style = {'width': '48%', 'display': 'inline-block'}),
-            html.Div([
-            dcc.Input(id=element,
-                            placeholder='Enter {}...'.format(element),
-                            type='number')], className="six columns", style = {'width': '48%', 'display': 'inline-block'})
-            ], className="row", style = {'border-style': 'solid', 'border-width': '.5px'})
-
-    return row
-
 
 app = dash.Dash()
 
