@@ -36,7 +36,7 @@ test_type = html.Div([
 ])
 
 confidence_level = html.Div([
-                html.P('Test Type'),
+                html.P('Confidence Level'),
                 dcc.RadioItems(id= 'confidence-level-radio',
                     options = [
                         {'label': '90%', 'value': 0.90},
@@ -61,23 +61,33 @@ app.layout= html.Div([
                 confidence_level
             ]),
             html.Div([
+                html.H2(id='results-text', children="The Results are...")
+            ]),
+            html.Div([
                 dcc.Graph(id = 'results-graph')
             ])
              ])
 
 
-@app.callback(Output('results-graph', 'figure'),
+@app.callback([Output('results-graph', 'figure'), Output('results-text', 'children')],
                 [Input('submit-button', 'n_clicks')],
                 [State(element, 'value') for element in test_data_elements])
 
 def update_results(n_clicks, control_visitors, control_conversions, treatment_visitors, treatment_conversions):
     control_mu = int(control_conversions)/int(control_visitors)
+    treatment_mu = int(treatment_conversions)/int(treatment_visitors)
     control_x, control_y, control_sd = create_curve(mu=int(control_conversions)/int(control_visitors), visitors=int(control_visitors))
     treatment_x, treatment_y, treatment_sd = create_curve(mu=int(treatment_conversions)/int(treatment_visitors), visitors=int(treatment_visitors))
 
     figure = create_plot(control_x, control_y, treatment_x, treatment_y, control_mu, control_sd)
 
-    return figure
+    if treatment_mu > control_mu:
+        relative_uplift = (treatment_mu/control_mu) - 1
+        text = "Variation B's observed conversion rate ({}) was {} higher than Variation A's conversion rate ({}).".format(str(treatment_mu*100)+'%', str(round(relative_uplift*100, 2)) + '%', str(control_mu*100)+'%')
+    elif control_mu > treament_mu:
+        elative_uplift = (control_mu/treatment_mu) - 1
+        text = "Variation A's observed conversion rate ({}) was {} higher than Variation B's conversion rate ({}).".format(str(control_mu*100)+'%',str(round(relative_uplift*100, 2)) + '%', str(treatment_mu*100)+'%')
+    return figure, text
 
 if __name__ == '__main__':
  app.run_server()
