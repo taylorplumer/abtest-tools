@@ -3,7 +3,7 @@ import numpy as np
 import dash
 import dash_core_components as dcc
 import dash_html_components as html
-from dash.dependencies import Input,Output
+from dash.dependencies import Input,Output, State
 import pandas as pd
 from min_sample_size import min_sample_size
 from create_row import create_row
@@ -55,7 +55,7 @@ app.layout= html.Div([
              html.Div([
                  create_row(element) for element in test_data_elements
                  ]),
-            html.Button('Submit', id='button'),
+            html.Button('Submit', id='submit-button'),
             html.Div([
                 test_type,
                 confidence_level
@@ -64,6 +64,14 @@ app.layout= html.Div([
                 dcc.Graph(id = 'results-graph')
             ])
              ])
+
+
+@app.callback([Output(element, 'value') for element in test_data_elements],
+                    [Input('submit-button', 'n_clicks')],
+                    [State(element, 'value') for element in test_data_elements])
+def output(n_clicks, control_visitors, control_conversions, treatment_visitors, treatment_conversions):
+    return control_visitors, control_conversions, treatment_visitors, treatment_conversions
+
 
 
 @app.callback(Output('results-graph', 'figure'),
