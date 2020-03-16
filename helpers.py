@@ -19,7 +19,7 @@ def create_plot(control_x, control_y, treatment_x, treatment_y, mu, sd):
     #fig.update_layout(xaxis = dict(range=(mu - (6*(sd)), mu + (6*(sd)))))
     return fig
 
-def calculate_pvalue(relative_uplift, control_sd, treatment_sd):
-    z_score = relative_uplift/np.sqrt(treatment_sd**2 + control_sd**2)
+def calculate_pvalue(difference_mu, control_sd, treatment_sd):
+    z_score = difference_mu/np.sqrt(treatment_sd**2 + control_sd**2)
     p_value = 1- special.ndtr(z_score)
     return p_value
