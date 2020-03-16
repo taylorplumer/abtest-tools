@@ -66,18 +66,11 @@ app.layout= html.Div([
              ])
 
 
-@app.callback([Output(element, 'value') for element in test_data_elements],
-                    [Input('submit-button', 'n_clicks')],
-                    [State(element, 'value') for element in test_data_elements])
-def output(n_clicks, control_visitors, control_conversions, treatment_visitors, treatment_conversions):
-    return control_visitors, control_conversions, treatment_visitors, treatment_conversions
-
-
-
 @app.callback(Output('results-graph', 'figure'),
-                [Input(element, 'value') for element in test_data_elements])
+                [Input('submit-button', 'n_clicks')],
+                [State(element, 'value') for element in test_data_elements])
 
-def update_results(control_visitors, control_conversions, treatment_visitors, treatment_conversions):
+def update_results(n_clicks, control_visitors, control_conversions, treatment_visitors, treatment_conversions):
     control_mu = int(control_conversions)/int(control_visitors)
     control_x, control_y, control_sd = create_curve(mu=int(control_conversions)/int(control_visitors), visitors=int(control_visitors))
     treatment_x, treatment_y, treatment_sd = create_curve(mu=int(treatment_conversions)/int(treatment_visitors), visitors=int(treatment_visitors))
