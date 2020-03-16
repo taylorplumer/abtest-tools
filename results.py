@@ -8,7 +8,7 @@ import pandas as pd
 from min_sample_size import min_sample_size
 from create_row import create_row
 from scipy import stats
-from helpers import create_curve, create_plot
+from helpers import create_curve, create_plot, calculate_pvalue
 
 
 test_data_elements = ['Visitors A', 'Conversions A', 'Visitors B', 'Conversions B']
@@ -70,10 +70,10 @@ app.layout= html.Div([
 
 
 @app.callback([Output('results-graph', 'figure'), Output('results-text', 'children')],
-                [Input('submit-button', 'n_clicks')],
+                [Input('submit-button', 'n_clicks'), Input('confidence-level-radio', 'value')],
                 [State(element, 'value') for element in test_data_elements])
 
-def update_results(n_clicks, control_visitors, control_conversions, treatment_visitors, treatment_conversions):
+def update_results(n_clicks, confidence_, control_visitors, control_conversions, treatment_visitors, treatment_conversions):
     control_mu = int(control_conversions)/int(control_visitors)
     treatment_mu = int(treatment_conversions)/int(treatment_visitors)
     control_x, control_y, control_sd = create_curve(mu=int(control_conversions)/int(control_visitors), visitors=int(control_visitors))
@@ -82,11 +82,22 @@ def update_results(n_clicks, control_visitors, control_conversions, treatment_vi
     figure = create_plot(control_x, control_y, treatment_x, treatment_y, control_mu, control_sd)
 
     if treatment_mu > control_mu:
+        winning_variation = 'Variation B'
         relative_uplift = (treatment_mu/control_mu) - 1
-        text = "Variation B's observed conversion rate ({}) was {} higher than Variation A's conversion rate ({}).".format(str(treatment_mu*100)+'%', str(round(relative_uplift*100, 2)) + '%', str(control_mu*100)+'%')
+        text_1 = "Variation B's observed conversion rate ({}) was {} higher than Variation A's conversion rate ({}).".format(str(treatment_mu*100)+'%', str(round(relative_uplift*100, 2)) + '%', str(control_mu*100)+'%')
     elif control_mu > treament_mu:
+        winning_variation = 'Variation A'
         elative_uplift = (control_mu/treatment_mu) - 1
-        text = "Variation A's observed conversion rate ({}) was {} higher than Variation B's conversion rate ({}).".format(str(control_mu*100)+'%',str(round(relative_uplift*100, 2)) + '%', str(treatment_mu*100)+'%')
+        text_1 = "Variation A's observed conversion rate ({}) was {} higher than Variation B's conversion rate ({}).".format(str(control_mu*100)+'%',str(round(relative_uplift*100, 2)) + '%', str(treatment_mu*100)+'%')
+
+    p_value = calculate_pvalue(relative_uplift, control_sd, treatment_sd)
+    if p_value < (1-confidence_):
+        text_2 = "You can be {} confident that {} has a higher conversion rate.".format(confidence_, winning_variation)
+    elif p_value > (1-confidence_):
+        text_2 = "The difference however isn't sufficicient, so you cannot be confident that this result is a consequence of the treatment."
+
+    text = text_1 + text_2
+
     return figure, text
 
 if __name__ == '__main__':
