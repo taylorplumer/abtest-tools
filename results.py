@@ -51,7 +51,9 @@ confidence_level = html.Div([
 
 app.layout= html.Div([
             header_,
-             html.P(children='Is your test result signficant? Input your test data below.'),
+             dcc.Markdown('''
+             **Are your test results significant?** Input your test data below.
+             '''),
              html.Div([
                  create_row(element) for element in test_data_elements
                  ]),
@@ -86,7 +88,7 @@ def update_results(n_clicks, confidence_, control_visitors, control_conversions,
         relative_uplift = (treatment_mu/control_mu) - 1
         difference_mu = treatment_mu - control_mu
         text_1 = "Variation B's observed conversion rate ({}) was {} higher than Variation A's conversion rate ({}).".format(str(treatment_mu*100)+'%', str(round(relative_uplift*100, 2)) + '%', str(control_mu*100)+'%')
-    elif control_mu > treament_mu:
+    elif control_mu > treatment_mu:
         winning_variation = 'Variation A'
         elative_uplift = (control_mu/treatment_mu) - 1
         difference_mu = control_mu - treatment_mu
@@ -98,7 +100,7 @@ def update_results(n_clicks, confidence_, control_visitors, control_conversions,
     if p_value < (1-confidence_):
         text_2 = "You can be {} confident that {} has a higher conversion rate.".format(confidence_, winning_variation)
     else:
-        text_2 = "The difference however isn't sufficicient, so you cannot be confident that this result is a consequence of the treatment."
+        text_2 = " The difference however isn't sufficicient, so you cannot be confident that this result is a consequence of the treatment."
 
     text = text_1 + text_2
 
