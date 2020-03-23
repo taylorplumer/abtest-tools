@@ -11,8 +11,9 @@ from scipy import stats
 from helpers import create_curve, create_plot, calculate_pvalue
 
 
-test_data_elements = ['Visitors A', 'Conversions A', 'Visitors B', 'Conversions B']
-
+test_data_keys = ['Visitors A', 'Conversions A', 'Visitors B', 'Conversions B']
+default_values = [100000, 3000, 100000, 3200]
+default_dict = dict(zip(test_data_keys, default_values))
 app = dash.Dash()
 
 header_ =     html.Div(
@@ -43,7 +44,7 @@ confidence_level = html.Div([
                         {'label': '95%', 'value': 0.95},
                         {'label': '99%', 'value': 0.99}
                     ],
-                    value = 'One-sided',
+                    value = 0.95,
                     labelStyle={'display': 'inline-blickk'}
                     )
 ])
@@ -55,7 +56,7 @@ app.layout= html.Div([
              **Are your test results significant?** Input your test data below.
              '''),
              html.Div([
-                 create_row(element) for element in test_data_elements
+                 create_row(key,value) for key, value in default_dict.items()
                  ]),
             html.Button('Submit', id='submit-button'),
             html.Div([
@@ -73,7 +74,7 @@ app.layout= html.Div([
 
 @app.callback([Output('results-graph', 'figure'), Output('results-text', 'children')],
                 [Input('submit-button', 'n_clicks'), Input('confidence-level-radio', 'value')],
-                [State(element, 'value') for element in test_data_elements])
+                [State(element, 'value') for element in test_data_keys])
 
 def update_results(n_clicks, confidence_, control_visitors, control_conversions, treatment_visitors, treatment_conversions):
     control_mu = int(control_conversions)/int(control_visitors)

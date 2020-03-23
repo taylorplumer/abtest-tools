@@ -9,7 +9,9 @@ from min_sample_size import min_sample_size
 from create_row import create_row
 import scipy.stats as scs
 
-elements = ['baseline_conversion_rate', 'effect_size', 'power', 'sig_level']
+variables = ['baseline_conversion_rate', 'effect_size', 'power', 'sig_level']
+default_values = [0.20, 0.05, 0.80, 0.05]
+default_dict = dict(zip(variables, default_values))
 
 app = dash.Dash()
 
@@ -23,14 +25,14 @@ header_ =     html.Div(
 app.layout= html.Div([
                 header_,
                 html.Div([
-                    create_row(element) for element in elements
+                    create_row(variable, value) for variable, value in default_dict.items()
                     ]),
                     html.H2(id='min_sample_size-output', children="Minimum Sample Size is ....")
                 ])
 
 
 @app.callback(Output('min_sample_size-output','children'),
-                [Input(element, 'value') for element in elements])
+                [Input(variable, 'value') for variable in variables])
 
 def update_output(baseline_conversion_rate,effect_size,power,sig_level):
     min_N = round(min_sample_size(float(baseline_conversion_rate),float(effect_size),float(power),float(sig_level)),0)
