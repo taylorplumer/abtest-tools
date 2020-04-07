@@ -88,18 +88,20 @@ def update_results(n_clicks, confidence_, control_visitors, control_conversions,
         winning_variation = 'Variation B'
         relative_uplift = (treatment_mu/control_mu) - 1
         difference_mu = treatment_mu - control_mu
-        text_1 = "Variation B's observed conversion rate ({}) was {} higher than Variation A's conversion rate ({}).".format(str(treatment_mu*100)+'%', str(round(relative_uplift*100, 2)) + '%', str(control_mu*100)+'%')
+        text_1 = "Variation B's observed conversion rate ({}) was {} higher than Variation A's conversion rate ({})."\
+        .format(str(round(treatment_mu*100, 2))+'%', str(round(relative_uplift*100, 2)) + '%', str(round(control_mu*100, 2))+'%')
     elif control_mu > treatment_mu:
         winning_variation = 'Variation A'
         elative_uplift = (control_mu/treatment_mu) - 1
         difference_mu = control_mu - treatment_mu
-        text_1 = "Variation A's observed conversion rate ({}) was {} higher than Variation B's conversion rate ({}).".format(str(control_mu*100)+'%',str(round(relative_uplift*100, 2)) + '%', str(treatment_mu*100)+'%')
+        text_1 = "Variation A's observed conversion rate ({}) was {} higher than Variation B's conversion rate ({})."\
+        .format(str(round(control_mu*100, 2))+'%',str(round(relative_uplift*100, 2)) + '%', str(round(treatment_mu*100, 2))+'%')
 
 
     p_value = calculate_pvalue(difference_mu, control_sd, treatment_sd)
 
     if p_value < (1-confidence_):
-        text_2 = "You can be {} confident that {} has a higher conversion rate.".format(confidence_, winning_variation)
+        text_2 = "You can be {} confident that {} has a higher conversion rate.".format(str((float(confidence_) * 100))+'%', winning_variation)
     else:
         text_2 = " The difference however isn't sufficicient, so you cannot be confident that this result is a consequence of the treatment."
 
