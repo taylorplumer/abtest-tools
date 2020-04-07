@@ -79,33 +79,37 @@ app.layout= html.Div([
 def update_results(n_clicks, confidence_, control_visitors, control_conversions, treatment_visitors, treatment_conversions):
     control_mu = int(control_conversions)/int(control_visitors)
     treatment_mu = int(treatment_conversions)/int(treatment_visitors)
+    difference_mu = abs(int(control_mu - treatment_mu))
     control_x, control_y, control_sd = create_curve(mu=int(control_conversions)/int(control_visitors), visitors=int(control_visitors))
     treatment_x, treatment_y, treatment_sd = create_curve(mu=int(treatment_conversions)/int(treatment_visitors), visitors=int(treatment_visitors))
 
     figure = create_plot(control_x, control_y, treatment_x, treatment_y, control_mu, control_sd)
 
-    if treatment_mu > control_mu:
-        winning_variation = 'Variation B'
-        relative_uplift = (treatment_mu/control_mu) - 1
-        difference_mu = treatment_mu - control_mu
-        text_1 = "Variation B's observed conversion rate ({}) was {} higher than Variation A's conversion rate ({})."\
-        .format(str(round(treatment_mu*100, 2))+'%', str(round(relative_uplift*100, 2)) + '%', str(round(control_mu*100, 2))+'%')
-    elif control_mu > treatment_mu:
-        winning_variation = 'Variation A'
-        elative_uplift = (control_mu/treatment_mu) - 1
-        difference_mu = control_mu - treatment_mu
-        text_1 = "Variation A's observed conversion rate ({}) was {} higher than Variation B's conversion rate ({})."\
-        .format(str(round(control_mu*100, 2))+'%',str(round(relative_uplift*100, 2)) + '%', str(round(treatment_mu*100, 2))+'%')
+    def create_resulting_text(control_mu, treatment_mu, difference_mu):
+        if treatment_mu > control_mu:
+            winning_variation = 'Variation B'
+            relative_uplift = (treatment_mu/control_mu) - 1
+            text_1 = "Variation B's observed conversion rate ({}) was {} higher than Variation A's conversion rate ({})."\
+            .format(str(round(treatment_mu*100, 2))+'%', str(round(relative_uplift*100, 2)) + '%', str(round(control_mu*100, 2))+'%')
+        elif control_mu > treatment_mu:
+            winning_variation = 'Variation A'
+            relative_uplift = (control_mu/treatment_mu) - 1
+            text_1 = "Variation A's observed conversion rate ({}) was {} higher than Variation B's conversion rate ({})."\
+            .format(str(round(control_mu*100, 2))+'%',str(round(relative_uplift*100, 2)) + '%', str(round(treatment_mu*100, 2))+'%')
 
 
-    p_value = calculate_pvalue(difference_mu, control_sd, treatment_sd)
+        p_value = calculate_pvalue(difference_mu, control_sd, treatment_sd)
 
-    if p_value < (1-confidence_):
-        text_2 = "You can be {} confident that {} has a higher conversion rate.".format(str((float(confidence_) * 100))+'%', winning_variation)
-    else:
-        text_2 = " The difference however isn't sufficicient, so you cannot be confident that this result is a consequence of the treatment."
+        if p_value < (1-confidence_):
+            text_2 = "You can be {} confident that {} has a higher conversion rate.".format(str((float(confidence_) * 100))+'%', winning_variation)
+        else:
+            text_2 = " The difference however isn't sufficicient, so you cannot be confident that this result is a consequence of the treatment."
 
-    text = text_1 + text_2
+        return text_1, text_2
+
+    text_1, text_2 = create_resulting_text(control_mu, treatment_mu, difference_mu)
+    text= text_1 + text_2
+
 
     return figure, text
 
