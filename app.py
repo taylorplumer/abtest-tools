@@ -28,7 +28,13 @@ def create_form(default_dict):
     for element, value_ in default_dict.items():
         form_dict[element] = dbc.FormGroup(
                                     [
-                                        dbc.Label(element, html_for= "example-{}-row".format(element), width=2),
+                                        dbc.Col(
+                                            dbc.Label(
+                                                    element,
+                                                    html_for= "example-{}-row".format(element),
+                                                    width=2
+                                                    ),
+                                            ),
                                         dbc.Col(
                                             dbc.Input(
                                                 type="number",
@@ -36,7 +42,7 @@ def create_form(default_dict):
                                                 placeholder="Enter number of votes",
                                                 value = value_
                                             ),
-                                            width=10,
+                                            width=8,
                                         ),
                                     ],
                                     row=True,
@@ -59,7 +65,6 @@ app.layout = html.Div([navbar, form, output_])
 
 @app.callback(Output('min_sample_size-output','children'),
                 [Input(variable, 'value') for variable in variables])
-
 def update_output(baseline_conversion_rate,effect_size,power,sig_level):
     min_N = int(round(min_sample_size(float(baseline_conversion_rate),float(effect_size),float(power),float(sig_level)),0))
     return 'Minimum sample size is "{}"'.format(min_N)
