@@ -7,7 +7,7 @@ import dash_html_components as html
 from dash.dependencies import Input,Output, State
 import pandas as pd
 from utils.min_sample_size import min_sample_size
-from create_row import create_row
+from utils.create_row import create_row
 from scipy import stats
 from utils.helpers import create_curve, create_plot, calculate_pvalue
 from min_sample_size_app import create_form
