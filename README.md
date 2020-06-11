@@ -7,6 +7,6 @@ This repo is intended to provide open source tools for ab testing. The intitial 
 ###  Installation
 This project utilizes default packages within the Anaconda distribution of Python for the majority of the analysis. In addition, dash and its associated dependencies will need to be installed.
 
-### Acknolwedgements
+### Acknowledgements
 The inspiration for the minimum sample size calculator comes from [Evan's Awesome A/B Tools](https://www.evanmiller.org/ab-testing/sample-size.html).
 The min_sample_size.py function is pulled from [Nguyen Ngo's ab-framework repo](https://github.com/mnguyenngo/ab-framework/blob/master/notebooks/min_sample_size.ipynb)
