@@ -6,16 +6,16 @@ import dash_bootstrap_components as dbc
 import dash_html_components as html
 from dash.dependencies import Input,Output, State
 import pandas as pd
-from min_sample_size import min_sample_size
+from utils.min_sample_size import min_sample_size
 from create_row import create_row
 from scipy import stats
-from helpers import create_curve, create_plot, calculate_pvalue
-from app import create_form
+from utils.helpers import create_curve, create_plot, calculate_pvalue
+from min_sample_size_app import create_form
 from scipy import stats, special
 
 
 test_data_keys = ['Visitors A', 'Conversions A', 'Visitors B', 'Conversions B']
-default_values = [100000, 3000, 100000, 3800]
+default_values = [100000, 3000, 100000, 3200]
 default_dict = dict(zip(test_data_keys, default_values))
 
 app = dash.Dash(external_stylesheets=[dbc.themes.MATERIA])

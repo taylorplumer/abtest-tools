@@ -15,6 +15,10 @@ def create_plot(control_x, control_y, treatment_x, treatment_y, mu, sd):
     treatment_trace = go.Scatter(x = treatment_x,y = treatment_y)
 
     fig = go.Figure(data=[control_trace, treatment_trace])
+    fig.update_layout(
+                    #xaxis={'showgrid': False},
+                    #yaxis={'showgrid': False},
+                    plot_bgcolor='rgb(254,254,254)')
 
     #fig.update_layout(xaxis = dict(range=(mu - (6*(sd)), mu + (6*(sd)))))
     return fig

@@ -6,7 +6,7 @@ import dash_html_components as html
 import dash_bootstrap_components as dbc
 from dash.dependencies import Input,Output
 import pandas as pd
-from min_sample_size import min_sample_size
+from utils.min_sample_size import min_sample_size
 import scipy.stats as scs
 
 variables = ['conversion_rate', 'effect_size', 'power', 'sig_level']
@@ -48,7 +48,7 @@ def create_form(default_dict):
                                     row=True,
                                 )
 
-    form_dict['button'] = dbc.Button("Submit", color="primary", size='lg', block=True)
+    form_dict['button'] = dbc.Button("Submit", color="primary", size='lg', block=True, id='submit-button')
 
     form = dbc.Container(dbc.Form(list(form_dict.values())))
 
@@ -67,7 +67,7 @@ app.layout = html.Div([navbar, form, output_])
                 [Input(variable, 'value') for variable in variables])
 def update_output(baseline_conversion_rate,effect_size,power,sig_level):
     min_N = int(round(min_sample_size(float(baseline_conversion_rate),float(effect_size),float(power),float(sig_level)),0))
-    return 'Minimum sample size is "{}"'.format(min_N)
+    return 'Minimum sample size is {}'.format(min_N)
 
 if __name__ == '__main__':
     app.run_server()
