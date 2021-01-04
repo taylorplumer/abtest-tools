@@ -5,7 +5,13 @@
 This repo is intended to provide open source tools for ab testing. The intitial tool is a minimum sample size calculator. It is a Dash app that can be run locally. Next steps include extending functionality of the app to include visualizations to aid in the end user's intuition of the statistical parameters involved.
 
 ###  Installation
-This project utilizes default packages within the Anaconda distribution of Python for the majority of the analysis. In addition, dash and its associated dependencies will need to be installed.
+This project utilizes default packages within the Anaconda distribution of Python. Dash will also need to be installed.
+
+You can install the conda environment with dependencies using the following command:
+
+```
+conda create --name <env> --file requirements.txt
+```
 
 ### Acknowledgements
 The inspiration for the minimum sample size calculator comes from [Evan's Awesome A/B Tools](https://www.evanmiller.org/ab-testing/sample-size.html).
